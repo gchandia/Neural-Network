@@ -120,4 +120,47 @@ public class NetworkTest {
     assertEquals(1.0, outputs[0], 0.05);
     assertEquals(1, myNetwork.predict(inputs));
   }
+  
+  @Test
+  public void finalNetworkTest() {
+    Neuron firstNeuron = new Neuron(0.1);
+    double[] example = {0.1, 0.2};
+    firstNeuron.setWeights(example);
+    firstNeuron.setOutput(0.2);
+    NeuronLayer firstLayer = new NeuronLayer();
+    firstLayer.addNeuron(firstNeuron);
+    
+    Neuron secondNeuron = new Neuron(0.1);
+    double[] exampleTwo = {0.2, 0.3};
+    secondNeuron.setWeights(exampleTwo);
+    secondNeuron.setOutput(0.3);
+    firstLayer.addNeuron(secondNeuron);
+    
+    Neuron outputNeuron = new Neuron(0.1);
+    double[] exampleThree = {0.3, 0.4};
+    outputNeuron.setWeights(exampleThree);
+    outputNeuron.setOutput(0.2);
+    NeuronLayer outputLayer = new NeuronLayer();
+    outputLayer.addNeuron(outputNeuron);
+    
+    NeuralNetwork network = new NeuralNetwork(firstLayer);
+    network.addLayer(outputLayer);
+    
+    double[] input = {0.9, 0.8};
+    double[] desiredOutput = {1.0};
+    
+    network.train(input, desiredOutput);
+    
+    assertEquals(0.10315220543572089, firstNeuron.getBias(), 0.0);
+    assertEquals(0.5866175789173301, firstNeuron.getOutput(), 0.0);
+    assertEquals(0.006304410871441775, firstNeuron.getDelta(), 0.0);
+    
+    assertEquals(0.10405277787531439, secondNeuron.getBias(), 0.0);
+    assertEquals(0.6271477663131956, secondNeuron.getOutput(), 0.0);
+    assertEquals(0.008105555750628777, secondNeuron.getDelta(), 0.0);
+    
+    assertEquals(0.14332974979557217, outputNeuron.getBias(), 0.0);
+    assertEquals(0.6287468135085144, outputNeuron.getOutput(), 0.0);
+    assertEquals(0.08665949959114436, outputNeuron.getDelta(), 0.0);    
+  }
 }
