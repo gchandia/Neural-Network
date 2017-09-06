@@ -86,10 +86,10 @@ public class PokerHandPredictionNetwork {
     return outputs;
   }
   
-  public double[] generateWeights(int ini, int fin) {
-    double[] weights = new double[fin - ini];
+  public double[] generateWeights(int base, int length) {
+    double[] weights = new double[length];
     for (int i = 0; i < weights.length; i++) {
-      weights[i] = fin - i;
+      weights[i] = base * i;
     }
     return weights;
   }
@@ -99,15 +99,15 @@ public class PokerHandPredictionNetwork {
     NeuronLayer firstLayer = new NeuronLayer(), secondLayer = new NeuronLayer(), thirdLayer = new NeuronLayer();
     //NeuronLayer extraLayer = new NeuronLayer();
     
-    for (int i = 0; i < 5; i++) {
-      Neuron actual = new Neuron(1.0, 5.0);
-      actual.setWeights(generateWeights(-5, 5));
+    for (int i = 0; i < 6; i++) {
+      Neuron actual = new Neuron(1.0, 1.0);
+      actual.setWeights(generateWeights(5 - i, 10));
       firstLayer.addNeuron(actual);
     }
     
-    for (int i = 0; i < 3; i++) {
-      Neuron actual = new Neuron(1.5, 2.5);
-      actual.setWeights(generateWeights(0, 5));
+    for (int i = 0; i < 8; i++) {
+      Neuron actual = new Neuron(1.0, 1.0);
+      actual.setWeights(generateWeights(3 - i, 6));
       secondLayer.addNeuron(actual);
     }
     
@@ -118,8 +118,8 @@ public class PokerHandPredictionNetwork {
     }*/
     
     for (int i = 0; i < 10; i++) {
-      Neuron actual = new Neuron(2.0, 1.5);
-      actual.setWeights(generateWeights(0, 3));
+      Neuron actual = new Neuron(0.1 * i, 0.1 * i);
+      actual.setWeights(generateWeights(10 - i, 8));
       thirdLayer.addNeuron(actual);
     }
     
@@ -178,7 +178,7 @@ public class PokerHandPredictionNetwork {
     for (int i = 0; i < 2000; i++) {
       int errorRate = 0;
       myNetwork.train(setOfNormalizedInputs[i], desiredOutputs[i]);
-      for (int j = 2000; j < 10000; j++) {
+      for (int j = 5000; j < 10000; j++) {
         if (myNetwork.predict(setOfNormalizedInputs[j]) != myPredictions[j]) {
           errorRate++;
         }
